@@ -19,11 +19,16 @@ public class VertxWebsocketServerVerticle extends AbstractVerticle {
                 String inputString = buffer.getString(0, buffer.length());
                 System.out.println("inputString=" + inputString);
                 vertx.executeBlocking(future -> {
-                    vertx.eventBus().send("anAddress", inputString, event -> System.out.printf("got back from reply"));
-                    future.complete();
+                    vertx.eventBus().send("anAddress", inputString, handler -> {
+
+                        System.out.println("handler success2");
+                        String resultMsg= (String) handler.result().body();
+                        future.complete(resultMsg);
+
+                    });
                 }, res -> {
                     if (res.succeeded()) {
-                        webSocketHandler.writeFinalTextFrame("output=" + inputString + "_result");
+                        webSocketHandler.writeFinalTextFrame("output=" + res.result().toString());
                     }
                 });
 

@@ -20,9 +20,10 @@ public class EventBusReceiverVerticle extends AbstractVerticle {
                         " received message: " +
                         message.body());
                 try {
-                    Thread.sleep(10000);
+                    //doing some looong work..
+                    Thread.sleep(5000);
                     System.out.printf("finished waiting\n");
-                    startFuture.complete();
+                    message.reply("I came from a long working job");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
