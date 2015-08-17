@@ -8,8 +8,8 @@ import io.vertx.core.*;
 public class EventBusSenderVerticle extends AbstractVerticle {
 
     public void start(Future<Void> startFuture) {
-        vertx.eventBus().publish("anAddress", "message 2");
-        vertx.eventBus().send   ("anAddress", "message 1");
+     //   vertx.eventBus().publish("anAddress", "message 2");
+      //  vertx.eventBus().send   ("anAddress", "message 1");
     }
 
 }

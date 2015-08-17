@@ -19,6 +19,13 @@ public class EventBusReceiverVerticle extends AbstractVerticle {
                 System.out.println(this.name +
                         " received message: " +
                         message.body());
+                try {
+                    Thread.sleep(10000);
+                    System.out.printf("finished waiting\n");
+                    startFuture.complete();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             });
         }
     }

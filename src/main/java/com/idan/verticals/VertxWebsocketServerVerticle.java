@@ -18,17 +18,17 @@ public class VertxWebsocketServerVerticle extends AbstractVerticle {
             webSocketHandler.handler(buffer -> {
                 String inputString = buffer.getString(0, buffer.length());
                 System.out.println("inputString=" + inputString);
-                webSocketHandler.writeFinalTextFrame("output=" + inputString + "_result");
+                vertx.executeBlocking(future -> {
+                    vertx.eventBus().send("anAddress", inputString, event -> System.out.printf("got back from reply"));
+                    future.complete();
+                }, res -> {
+                    if (res.succeeded()) {
+                        webSocketHandler.writeFinalTextFrame("output=" + inputString + "_result");
+                    }
+                });
+
             });
         }).listen(8080);
-
-
-      /*  vertx.createHttpServer().websocketHandler(ws -> ws.handler(buffer -> System.out.printf(buffer.getString(0,buffer.length())))).requestHandler(req -> {
-           req.response().write("rrr");
-
-        }).listen(8080);*/
-
-
     }
 
 
