@@ -1,7 +1,9 @@
 package com.idan.verticals;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
 
 /**
  * Created by Ext_IdanF on 10/08/2015.
@@ -14,20 +16,15 @@ public class EventBusReceiverVerticle extends AbstractVerticle {
             this.name = name;
         }
 
-        public void start(Future<Void> startFuture) {
-            vertx.eventBus().consumer("anAddress", message -> {
-                System.out.println(this.name +
-                        " received message: " +
-                        message.body());
-                try {
-                    //doing some looong work..
-                    Thread.sleep(5000);
-                    System.out.printf("finished waiting\n");
-                    message.reply("I came from a long working job");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
+        public void start() {
+            vertx.eventBus().consumer("geo-service", new Handler<Message<JsonObject>>() {
+                        @Override
+                        public void handle(Message<JsonObject> event) {
+                            // calculate friends from redis
+                            vertx.eventBus().send(event.body().getString("address"), "444, 666, 888");
+
+                        }
+                    });
         }
     }
 
